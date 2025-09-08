@@ -101,7 +101,7 @@ jobs:
             cd /opt/$REPO_NAME
             docker compose down
             docker image prune -f
-            IMAGE_TAG=$IMAGE_TAG docker compose  -f docker-compose.yml up 
+            IMAGE_TAG=$IMAGE_TAG docker compose -f docker-compose.yml up taiga-db
 
             echo "[INFO] Serviços em execução:"
             docker ps --format "table {{.Names}}\t{{.Ports}}"
