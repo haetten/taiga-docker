@@ -36,7 +36,7 @@ jobs:
           USER: ${{ secrets.SSH_USER }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
           EMAIL_DEFAULT_FROM: ${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
@@ -54,7 +54,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST '
             export GH_TOKEN=${{ secrets.GH_TOKEN }}
             export IMAGE_TAG=${{ env.IMAGE_TAG }}
-            export POSTGRES_USER="${POSTGRES_USER}"
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
             echo "Postgres User: " $POSTGRES_USER
             export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
             export EMAIL_DEFAULT_FROM="${EMAIL_DEFAULT_FROM}"
