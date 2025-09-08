@@ -4,7 +4,7 @@ x-environment:
   &default-back-environment
   # These environment variables will be used by taiga-back and taiga-async.
   # Database settings
-  POSTGRES_DB: "taiga"
+  POSTGRES_DB: "taiga" 
   POSTGRES_USER: "${POSTGRES_USER}"
   POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
   POSTGRES_HOST: "taiga-db"
