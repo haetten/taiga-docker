@@ -36,39 +36,24 @@ jobs:
           USER: ${{ secrets.SSH_USER }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
-          EMAIL_DEFAULT_FROM: ${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD || vars.EMAIL_HOST_PASSWORD }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER || vars.EMAIL_HOST_USER }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT || vars.EMAIL_PORT }}
-          RABBITMQ_ERLANG_COOKIE: ${{ secrets.RABBITMQ_ERLANG_COOKIE || vars.RABBITMQ_ERLANG_COOKIE }}
-          RABBITMQ_PASS: ${{ secrets.RABBITMQ_PASS || vars.RABBITMQ_PASS }}
-          RABBITMQ_USER: ${{ secrets.RABBITMQ_USER || vars.RABBITMQ_USER }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY || vars.SECRET_KEY }}
-          SUBPATH: ${{ secrets.SUBPATH || vars.SUBPATH }}
-          TAIGA_DOMAIN: ${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
-          TAIGA_SCHEME: ${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST '
             export GH_TOKEN=${{ secrets.GH_TOKEN }}
             export IMAGE_TAG=${{ env.IMAGE_TAG }}
             export POSTGRES_USER=${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
-            echo "Postgres User: " $POSTGRES_USER
-            export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
-            export EMAIL_DEFAULT_FROM="${EMAIL_DEFAULT_FROM}"
-            export EMAIL_HOST="${EMAIL_HOST}"
-            export EMAIL_HOST_PASSWORD="${EMAIL_HOST_PASSWORD}"
-            export EMAIL_HOST_USER="${EMAIL_HOST_USER}"
-            export EMAIL_PORT="${EMAIL_PORT}"
-            export RABBITMQ_ERLANG_COOKIE="${RABBITMQ_ERLANG_COOKIE}"
-            export RABBITMQ_PASS="${RABBITMQ_PASS}"
-            export RABBITMQ_USER="${RABBITMQ_USER}"
-            export SECRET_KEY="${SECRET_KEY}"
-            export SUBPATH="${SUBPATH}"
-            export TAIGA_DOMAIN="${TAIGA_DOMAIN}"
-            export TAIGA_SCHEME="${TAIGA_SCHEME}"
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
+            export EMAIL_DEFAULT_FROM=${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
+            export EMAIL_HOST=${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
+            export EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD || vars.EMAIL_HOST_PASSWORD }}
+            export EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER || vars.EMAIL_HOST_USER }}
+            export EMAIL_PORT=${{ secrets.EMAIL_PORT || vars.EMAIL_PORT }}
+            export RABBITMQ_ERLANG_COOKIE=${{ secrets.RABBITMQ_ERLANG_COOKIE || vars.RABBITMQ_ERLANG_COOKIE }}
+            export RABBITMQ_PASS=${{ secrets.RABBITMQ_PASS || vars.RABBITMQ_PASS }}
+            export RABBITMQ_USER=${{ secrets.RABBITMQ_USER || vars.RABBITMQ_USER }}
+            export SECRET_KEY=${{ secrets.SECRET_KEY || vars.SECRET_KEY }}
+            export SUBPATH=${{ secrets.SUBPATH || vars.SUBPATH }}
+            export TAIGA_DOMAIN=${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
+            export TAIGA_SCHEME=${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
             export REPO_FULL_NAME=${{ github.repository }}
             export CLONE_URL=https://$GH_TOKEN@github.com/$REPO_FULL_NAME.git
 
