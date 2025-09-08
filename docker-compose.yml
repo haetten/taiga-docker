@@ -44,7 +44,7 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     healthcheck:
-      test: ["CMD-SHELL", "/healthcheck.sh"]
+      test: ["CMD-SHELL", "/taiga-db/healthcheck.sh"]
       interval: 5s
       timeout: 15s
       retries: 5
@@ -53,9 +53,10 @@ services:
       - "8888:5432"
     volumes:
       - taiga-db-data:/var/lib/postgresql/data
-      - ./healthcheck.sh:/healthcheck.sh:ro
+      - ./taiga-db/healthcheck.sh:/taiga-db/healthcheck.sh:ro
     networks:
       - taiga
+
 
 
   taiga-back:
