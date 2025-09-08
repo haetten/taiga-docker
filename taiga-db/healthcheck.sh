@@ -7,7 +7,7 @@ PORT="5432"
 USER="${POSTGRES_USER}"
 
 # Testa se Postgres responde
-#pg_isready -h "$HOST" -p "$PORT" -U "$USER" || exit 1
+pg_isready -h "$HOST" -p "$PORT" -U "$USER" || exit 1
 
 # Tenta uma query simples para garantir que autenticação funciona
 psql -h "$HOST" -p "$PORT" -U "$USER" -d "${POSTGRES_DB}" -c "SELECT 1;" >/dev/null 2>&1 || exit 1
