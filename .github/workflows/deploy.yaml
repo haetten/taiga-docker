@@ -36,7 +36,7 @@ jobs:
           USER: ${{ secrets.SSH_USER }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
           EMAIL_DEFAULT_FROM: ${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
