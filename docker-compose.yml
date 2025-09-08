@@ -45,10 +45,10 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 2s
+      interval: 5s
       timeout: 15s
       retries: 5
-      start_period: 3s
+      start_period: 20s
     ports:
       - "8888:5432"
     volumes:
