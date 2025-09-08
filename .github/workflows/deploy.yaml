@@ -40,6 +40,11 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST '
             export GH_TOKEN=${{ secrets.GH_TOKEN }}
             export IMAGE_TAG=${{ env.IMAGE_TAG }}
+            export REPO_FULL_NAME=${{ github.repository }}
+            export CLONE_URL=https://$GH_TOKEN@github.com/$REPO_FULL_NAME.git
+            export BRANCH=${{ steps.get_branch.outputs.branch }}
+            export REPO_NAME=${{ github.event.repository.name }}
+
             export POSTGRES_USER=${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
             export EMAIL_DEFAULT_FROM=${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
@@ -54,11 +59,6 @@ jobs:
             export SUBPATH=${{ secrets.SUBPATH || vars.SUBPATH }}
             export TAIGA_DOMAIN=${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
             export TAIGA_SCHEME=${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
-            export REPO_FULL_NAME=${{ github.repository }}
-            export CLONE_URL=https://$GH_TOKEN@github.com/$REPO_FULL_NAME.git
-
-            export BRANCH=${{ steps.get_branch.outputs.branch }}
-            export REPO_NAME=${{ github.event.repository.name }}
 
             echo "[INFO] Entregando branch: $BRANCH"
             echo "[INFO] TAG da imagem: $IMAGE_TAG"
@@ -87,7 +87,7 @@ jobs:
             cd /opt/$REPO_NAME
             docker compose down
             docker image prune -f
-            IMAGE_TAG=$IMAGE_TAG docker compose -f docker-compose.yml up -d taiga-db
+            IMAGE_TAG=$IMAGE_TAG docker compose -f docker-compose.yml up -d 
 
             echo "[INFO] Serviços em execução:"
             docker ps --format "table {{.Names}}\t{{.Ports}}"
