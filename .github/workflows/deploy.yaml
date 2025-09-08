@@ -55,6 +55,7 @@ jobs:
             export GH_TOKEN=${{ secrets.GH_TOKEN }}
             export IMAGE_TAG=${{ env.IMAGE_TAG }}
             export POSTGRES_USER="${POSTGRES_USER}"
+            echo "Postgres User: " $POSTGRES_USER
             export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
             export EMAIL_DEFAULT_FROM="${EMAIL_DEFAULT_FROM}"
             export EMAIL_HOST="${EMAIL_HOST}"
