@@ -1,0 +1,118 @@
+name: Deploy via SSH
+
+on:
+  push:
+    branches:
+      - "**" # ativa em qualquer branch
+
+jobs:
+  deploy:
+    name: Deploy on remote server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Get branch name
+        id: get_branch
+        run: echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+
+      - name: Set image tag
+        id: vars
+        run: |
+          DATE=$(date +'%Y%d%m%H%M')
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "IMAGE_TAG=${DATE}_${SHORT_SHA}" >> $GITHUB_ENV
+
+      - name: SSH and deploy
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
+          EMAIL_DEFAULT_FROM: ${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD || vars.EMAIL_HOST_PASSWORD }}
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER || vars.EMAIL_HOST_USER }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT || vars.EMAIL_PORT }}
+          RABBITMQ_ERLANG_COOKIE: ${{ secrets.RABBITMQ_ERLANG_COOKIE || vars.RABBITMQ_ERLANG_COOKIE }}
+          RABBITMQ_PASS: ${{ secrets.RABBITMQ_PASS || vars.RABBITMQ_PASS }}
+          RABBITMQ_USER: ${{ secrets.RABBITMQ_USER || vars.RABBITMQ_USER }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY || vars.SECRET_KEY }}
+          SUBPATH: ${{ secrets.SUBPATH || vars.SUBPATH }}
+          TAIGA_DOMAIN: ${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
+          TAIGA_SCHEME: ${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST '
+            export GH_TOKEN=${{ secrets.GH_TOKEN }}
+            export IMAGE_TAG=${{ env.IMAGE_TAG }}
+            export POSTGRES_USER="${POSTGRES_USER}"
+            export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+            export EMAIL_DEFAULT_FROM="${EMAIL_DEFAULT_FROM}"
+            export EMAIL_HOST="${EMAIL_HOST}"
+            export EMAIL_HOST_PASSWORD="${EMAIL_HOST_PASSWORD}"
+            export EMAIL_HOST_USER="${EMAIL_HOST_USER}"
+            export EMAIL_PORT="${EMAIL_PORT}"
+            export RABBITMQ_ERLANG_COOKIE="${RABBITMQ_ERLANG_COOKIE}"
+            export RABBITMQ_PASS="${RABBITMQ_PASS}"
+            export RABBITMQ_USER="${RABBITMQ_USER}"
+            export SECRET_KEY="${SECRET_KEY}"
+            export SUBPATH="${SUBPATH}"
+            export TAIGA_DOMAIN="${TAIGA_DOMAIN}"
+            export TAIGA_SCHEME="${TAIGA_SCHEME}"
+            export REPO_FULL_NAME=${{ github.repository }}
+            export CLONE_URL=https://$GH_TOKEN@github.com/$REPO_FULL_NAME.git
+
+            export BRANCH=${{ steps.get_branch.outputs.branch }}
+            export REPO_NAME=${{ github.event.repository.name }}
+
+            echo "[INFO] Entregando branch: $BRANCH"
+            echo "[INFO] TAG da imagem: $IMAGE_TAG"
+
+            echo "[INFO] Verificando se o diretório existe: /opt/$REPO_NAME"
+
+            set -e
+            if [ ! -d "/opt/$REPO_NAME" ]; then
+              echo "[INFO] Diretório não existe. Clonando repositório..."
+              git clone $CLONE_URL /opt/$REPO_NAME
+            fi
+
+            cd /opt/$REPO_NAME
+
+            echo "[INFO] Limpando ambiente"
+            git fetch --all --prune
+            if ! git show-ref --verify --quiet refs/heads/$BRANCH; then
+              git checkout -b $BRANCH origin/$BRANCH
+            else
+              git checkout $BRANCH
+            fi
+            git reset --hard origin/$BRANCH
+            git clean -fd
+
+            echo "[INFO] Recriando containers"
+            cd /opt/$REPO_NAME
+            docker compose down
+            docker image prune -f
+            IMAGE_TAG=$IMAGE_TAG docker compose  -f docker-compose.yml up 
+
+            echo "[INFO] Serviços em execução:"
+            docker ps --format "table {{.Names}}\t{{.Ports}}"
+          '
+
+      - name: Notificação de sucesso
+        if: success()
+        run: |
+          echo "✅ Deploy realizado com sucesso na branch ${{ steps.get_branch.outputs.branch }}!"
+
+      - name: Notificação de falha
+        if: failure()
+        run: |
+          echo "❌ Falha no deploy da branch ${{ steps.get_branch.outputs.branch }}."
