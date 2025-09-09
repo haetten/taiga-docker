@@ -59,6 +59,7 @@ jobs:
             #export SUBPATH=${{ secrets.SUBPATH || vars.SUBPATH }}
             export TAIGA_DOMAIN=${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
             export TAIGA_SCHEME=${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
+            export WEBSOCKETS_SCHEME=${{ secrets.WEBSOCKETS_SCHEME || vars.WEBSOCKETS_SCHEME }}
 
             echo "[INFO] Entregando branch: $BRANCH"
             echo "[INFO] TAG da imagem: $IMAGE_TAG"
