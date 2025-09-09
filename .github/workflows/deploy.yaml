@@ -57,8 +57,8 @@ jobs:
             export RABBITMQ_USER=${{ secrets.RABBITMQ_USER || vars.RABBITMQ_USER }}
             export SECRET_KEY=${{ secrets.SECRET_KEY || vars.SECRET_KEY }}
             # export SUBPATH=${{ secrets.SUBPATH || vars.SUBPATH }}
-            # export TAIGA_DOMAIN=${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
-            # export TAIGA_SCHEME=${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
+            export TAIGA_DOMAIN=${{ secrets.TAIGA_DOMAIN || vars.TAIGA_DOMAIN }}
+            export TAIGA_SCHEME=${{ secrets.TAIGA_SCHEME || vars.TAIGA_SCHEME }}
 
             echo "[INFO] Entregando branch: $BRANCH"
             echo "[INFO] TAG da imagem: $IMAGE_TAG"
