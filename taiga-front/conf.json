@@ -1,6 +1,6 @@
 {
     "api": "https://projetos.fhsistemas.com/api/v1/",
-    "eventsUrl": "wss://projetos.fhsistemas.com/events",
+    "eventsUrl": "ws://fhsistemas.com:9000/events",
     "baseHref": "/",
     "eventsMaxMissedHeartbeats": 5,
     "eventsHeartbeatIntervalTime": 60000,
