@@ -110,8 +110,8 @@ services:
       # ...your customizations go here
     networks:
       - taiga
-    # volumes:
-    #   - ./conf.json:/usr/share/nginx/html/conf.json
+    volumes:
+      - ./taiga-front/conf.json:/usr/share/nginx/html/conf.json:ro
 
   taiga-events:
     image: taigaio/taiga-events:latest
