@@ -48,6 +48,7 @@ jobs:
             export POSTGRES_USER=${{ secrets.POSTGRES_USER || vars.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD || vars.POSTGRES_PASSWORD }}
             export EMAIL_DEFAULT_FROM=${{ secrets.EMAIL_DEFAULT_FROM || vars.EMAIL_DEFAULT_FROM }}
+            export EMAIL_BACKEND=${{ secrets.EMAIL_BACKEND || vars.EMAIL_BACKEND }}
             export EMAIL_HOST=${{ secrets.EMAIL_HOST || vars.EMAIL_HOST }}
             export EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD || vars.EMAIL_HOST_PASSWORD }}
             export EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER || vars.EMAIL_HOST_USER }}
